@@ -38,10 +38,11 @@ con.connect(function (err) {
   app.get("/", async function (req, res) {
     const data = await queryExecuter("select * from books");
     // console.log(data);
-    res.render("register", { data });
+    console.log("get request");
+    // res.render("register", { data });
   });
-  app.get("/other?", async function (req, ress) {
-    let inp_name = req.query.name;
+  app.get("/like?", async function (req, ress) {
+    let inp_name = req.query.like;
     let data;
 
     Book.findAll({
@@ -55,8 +56,7 @@ con.connect(function (err) {
 
       .then((res) => {
         console.log("where like data", res);
-        // ress.send(res);
-        ress.render("other", { data: res });
+        ress.send(res);
       })
       .catch((error) => {
         console.error("failed to retrive", error);
@@ -74,7 +74,6 @@ con.connect(function (err) {
     });
   }
 });
-app.listen(port, () => console.log(`http://localhost:${port}`));
 
 const Op = Sequelize.Op;
 
@@ -130,21 +129,28 @@ sequelize.sync().then(() => {
     });
 
   // select from database
+  app.get("/pagin?",async function (req, ress) {
+    let pagee=req.query.page;
+    let limit=10;
+    console.log("page=",pagee);
+    var off = (pagee - 1) * limit;
 
-  Book.findAll({
-    offset: 5,
-    limit: 2,
-    order: [
-      // Will escape full_name and validate DESC against a list of valid direction parameters
-      ["id", "DESC"],
-    ],
-  })
-    .then((res) => {
-      // console.log("select data", res);
+   await Book.findAll({
+      offset: off,
+      limit: 10,
+      order: [
+        // Will escape full_name and validate DESC against a list of valid direction parameters
+        ["id", "ASC"],
+      ],
     })
-    .catch((error) => {
-      console.error("Failed to retrieve data : ", error);
-    });
+      .then((res) => {
+        // console.log("select data", res);
+        ress.send(res)
+      })
+      .catch((error) => {
+        console.error("Failed to retrieve data : ", error);
+      });
+  });
 
   //   all data
   Book.findAndCountAll()
@@ -161,7 +167,6 @@ sequelize.sync().then(() => {
       title: {
         [Op.like]: "%ab%",
       },
-    
     },
   })
     .then((res) => {
@@ -196,4 +201,6 @@ sequelize.sync().then(() => {
   // })
   // .catch((error) => {
   //   console.error("Unable to create table : ", error);
+  app.listen(port, () => console.log(`http://localhost:${port}`));
+
 });

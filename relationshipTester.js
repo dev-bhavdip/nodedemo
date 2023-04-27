@@ -44,7 +44,7 @@ con.connect(function (err) {
 
   app.post("/select", async function (req, res) {
     // 1
-    
+
     User.findOne({
       where: { email: "john-connor@domain.com" },
       include: "company",
@@ -96,41 +96,75 @@ con.connect(function (err) {
     let lname = req.body.lname;
     let c_id = req.body.c_id;
     let w_day = req.body.w_day;
+    let c_name = req.body.c_name;
 
-    console.log("email=", email1);
+    console.log("email=", email1, "company id=", c_id);
     // Company.create({
     //   name: "eSparkBiz",
     // });
-    WorkingDay.create({
+    await WorkingDay.create({
       weekDay: "FriDay",
       workingDate: Date(),
       isWorking: 1,
     });
-    try {
-      User.create(
+    await Company.bulkCreate(
+      [
         {
-          email: `${email1}`,
-          firstName: `${fname}`,
-          lastName: `${lname}`,
-          companyId: `${c_id}`,
-          days: [
-            { weekDay: `${w_day}`, isWorking: 1 },
-            { weekDay: `${w_day}`, isWorking: 1 },
-            { weekDay: `${w_day}`, isWorking: 1 },
-            { weekDay: `${w_day}`, isWorking: 1 },
+          name: `${c_name}`,
+          employes: [
+            {
+              email: `${email1}`,
+              firstName: `${fname}`,
+              lastName: `${lname}`,
+            },
           ],
-          // company:[{companyId:93}]
         },
         {
-          include: { model: WorkingDay, as: "days" },
-          // include: { model: Company, as: "company" }
-        }
-      );
-    } catch (err) {
-      console.log("error in create", err);
-    }
+          employes: [
+            {
+              email: `${email1}`,
+              firstName: `${fname}`,
+              lastName: `${lname}`,
+            },
+          ],
+        },
+        {
+          employes: [
+            {
+              email: `${email1}`,
+              firstName: `${fname}`,
+              lastName: `${lname}`,
+            },
+          ],
+        },
+      ],
+      { include: { model: User, as: "employes" } }
+    );
+    // try {
+    //   User.create(
+    //     {
+    //       email: `${email1}`,
+    //       firstName: `${fname}`,
+    //       lastName: `${lname}`,
+    //       companyId: `${c_id}`,
+    //       days: [
+    //         { weekDay: `${w_day}`, isWorking: 1 },
+    //         { weekDay: `${w_day}`, isWorking: 1 },
+    //         { weekDay: `${w_day}`, isWorking: 1 },
+    //         { weekDay: `${w_day}`, isWorking: 1 },
+    //       ],
+    //       // company:[{companyId:93}]
+    //     },
+    //     {
+    //       include: { model: WorkingDay, as: "days" },
+    //       // include: { model: Company, as: "company" }
+    //     }
+    //   );
+    // } catch (err) {
+    //   console.log("error in create", err);
+    // }
 
-    usworkingday.create({
+    await usworkingday.create({
       userId: 2,
       workingDayId: 1,
     });
@@ -145,13 +179,23 @@ con.connect(function (err) {
     let w_day = req.body.w_day;
     let c_name = req.body.c_name;
     let u_id = req.body.u_id;
-console.log("user id=",u_id);
+    console.log("user id=", u_id);
 
-    const data =await  User.findOne({ where: { id: `${u_id}` } });
+    const data = await User.findOne({ where: { id: `${u_id}` } });
     const cmp_id = data.companyId;
 
     console.log("company name=", data.companyId);
-    await User.update({ firstName: `${fname}`,company:{name:"ohm"} ,include:[{model:Company,as:"company"}]}, { where: { id: `${u_id}` } })
+    await User.update(
+      {
+        firstName: `${fname}`,
+        company: [{ name: "ohm" }],
+      },
+      { where: { id: `${u_id}` } },
+
+      {
+        include: [{ model: Company, as: "company" }],
+      }
+    )
       .then(() => {
         Company.update(
           { name: `${c_name}` },
@@ -170,8 +214,6 @@ console.log("user id=",u_id);
     res.send("updated data");
   });
 });
-
-
 
 // Get the employees for a given company
 
