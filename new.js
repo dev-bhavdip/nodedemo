@@ -131,6 +131,8 @@ sequelize.sync().then(() => {
   // select from database
   app.get("/pagin?",async function (req, ress) {
     let pagee=req.query.page;
+    let ord_name=req.query.ordname;
+    let ord_type=req.query.ordtype;
     let limit=10;
     console.log("page=",pagee);
     var off = (pagee - 1) * limit;
@@ -140,7 +142,7 @@ sequelize.sync().then(() => {
       limit: 10,
       order: [
         // Will escape full_name and validate DESC against a list of valid direction parameters
-        ["id", "ASC"],
+        [`${ord_name}`, `${ord_type}`],
       ],
     })
       .then((res) => {

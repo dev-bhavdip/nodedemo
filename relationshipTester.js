@@ -1,5 +1,6 @@
 const models = require("./models");
 const User = models.Users;
+const user=models.user;
 const Company = models.Company;
 const WorkingDay = models.WorkingDay;
 const usworkingday = models.UsersWorkingDay;
@@ -44,6 +45,15 @@ con.connect(function (err) {
 
   app.post("/select", async function (req, res) {
     // 1
+
+  //  User.findAll().then((ress)=>{
+  //   console.log("this is default scope data",ress);
+  //  })
+ await User.scope('defaultScope').findAll({where: { id: 1 }}).then((ress)=>{
+    console.log("this is scope value ",ress);
+  }).catch((err)=>{
+    console.log("this is scope value error");
+  })
 
     User.findOne({
       where: { email: "john-connor@domain.com" },
@@ -140,29 +150,29 @@ con.connect(function (err) {
       ],
       { include: { model: User, as: "employes" } }
     );
-    // try {
-    //   User.create(
-    //     {
-    //       email: `${email1}`,
-    //       firstName: `${fname}`,
-    //       lastName: `${lname}`,
-    //       companyId: `${c_id}`,
-    //       days: [
-    //         { weekDay: `${w_day}`, isWorking: 1 },
-    //         { weekDay: `${w_day}`, isWorking: 1 },
-    //         { weekDay: `${w_day}`, isWorking: 1 },
-    //         { weekDay: `${w_day}`, isWorking: 1 },
-    //       ],
-    //       // company:[{companyId:93}]
-    //     },
-    //     {
-    //       include: { model: WorkingDay, as: "days" },
-    //       // include: { model: Company, as: "company" }
-    //     }
-    //   );
-    // } catch (err) {
-    //   console.log("error in create", err);
-    // }
+    try {
+      User.create(
+        {
+          email: `${email1}`,
+          firstName: `${fname}`,
+          lastName: `${lname}`,
+          companyId: `${c_id}`,
+          days: [
+            { weekDay: `${w_day}`, isWorking: 1 },
+            { weekDay: `${w_day}`, isWorking: 1 },
+            { weekDay: `${w_day}`, isWorking: 1 },
+            { weekDay: `${w_day}`, isWorking: 1 },
+          ],
+          // company:[{companyId:93}]
+        },
+        {
+          include: { model: WorkingDay, as: "days" },
+          // include: { model: Company, as: "company" }
+        }
+      );
+    } catch (err) {
+      console.log("error in create", err);
+    }
 
     await usworkingday.create({
       userId: 2,
@@ -179,6 +189,7 @@ con.connect(function (err) {
     let w_day = req.body.w_day;
     let c_name = req.body.c_name;
     let u_id = req.body.u_id;
+
     console.log("user id=", u_id);
 
     const data = await User.findOne({ where: { id: `${u_id}` } });
@@ -188,21 +199,18 @@ con.connect(function (err) {
     await User.update(
       {
         firstName: `${fname}`,
-        company: [{ name: "ohm" }],
       },
-      { where: { id: `${u_id}` } },
+      { where: { id: `${u_id}` } }
 
-      {
-        include: [{ model: Company, as: "company" }],
-      }
+      // await Company.update(
+      //   { name: `${c_name}` },
+      //   { where: { id: `${cmp_id}` } }
+      // )
+      //   .catch((error) => {
+      //     console.log(error);
+      //   })
     )
       .then(() => {
-        Company.update(
-          { name: `${c_name}` },
-          { where: { id: `${cmp_id}` } }
-        ).catch((error) => {
-          console.log(error);
-        });
         console.log("updated data");
       })
       .catch((err) => {

@@ -1,6 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 const WorkingDay = Model.WorkingDay;
+const Company = Model.Company;
 
 module.exports = (sequelize, DataTypes) => {
   class Users extends Model {
@@ -13,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  Users.init(
+ const user= Users.init(
     {
       email: DataTypes.STRING,
       firstName: DataTypes.STRING,
@@ -46,21 +47,31 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "Users",
     }
   );
+  
+
   Users.associate = function (models) {
+   
     Users.belongsTo(models.Company, { foreignKey: "companyId", as: "company" });
+    Users.addScope('defaultScope',{limit: 2})
+
   };
   Users.associate = function (models) {
-    Users.belongsTo(models.Company, { foreignKey: "companyId", as: "company" });
+    // Users.addScope('defaultScope',{limit: 2})
+
     Users.belongsToMany(models.WorkingDay, {
       through: "UsersWorkingDays",
       foreignKey: "userId",
       as: "days",
     });
+    Users.belongsTo(models.Company, { foreignKey: "companyId", as: "company" });
+
   };
 
-  // Users.addScope("defaultScope", {
-  //   include: [{ model: WorkingDay }],
-  // });
-
-  return Users;
+  user.scope().findAll().then((aa)=>
+  {
+    console.log("get data from scope in User js");
+  }).catch((err)=>{
+    console.log("error get in user js from scope");
+  })
+  return Users,user;
 };
