@@ -1,5 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
+const videos=require('./videos');
+// const videos=model.videos;
 module.exports = (sequelize, DataTypes) => {
   class photos extends Model {
     /**

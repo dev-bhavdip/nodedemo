@@ -6,6 +6,12 @@ const photos = require("./models/photos");
 const videos = require("./models/videos");
 const { Model } = require("sequelize");
 var bodyparser = require("body-parser");
+const models = require("./models");
+
+const com = models.comment;
+const vid = models.videos;
+const pht = models.photos;
+
 let app = express();
 app.set("view engine", "ejs");
 app.use(bodyparser.urlencoded({ extended: false }));
@@ -31,6 +37,91 @@ const sequelize = new Sequelize(
 );
 
 conn.connect(function (err) {
+  const video = sequelize.define("videos", {
+    id: {
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+      type: Sequelize.INTEGER,
+    },
+    title: {
+      type: Sequelize.STRING,
+    },
+
+    text: {
+      type: Sequelize.STRING,
+    },
+    createdAt: {
+      allowNull: false,
+      type: Sequelize.DATE,
+    },
+    updatedAt: {
+      allowNull: false,
+      type: Sequelize.DATE,
+    },
+  });
+
+  // comment
+  const comment = sequelize.define("comments", {
+    id: {
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+      type: Sequelize.INTEGER,
+    },
+    title: {
+      type: Sequelize.STRING,
+    },
+    commentableId: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      references: {
+        model: "videos",
+        key: "id",
+      },
+      // references:{
+      //   model: "photos",
+      //   key: "id",
+      // }
+    },
+    commentableType: {
+      type: Sequelize.STRING,
+    },
+    createdAt: {
+      allowNull: false,
+      type: Sequelize.DATE,
+    },
+    updatedAt: {
+      allowNull: false,
+      type: Sequelize.DATE,
+    },
+  });
+
+  // image
+  const photo = sequelize.define("photos", {
+    id: {
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+      type: Sequelize.INTEGER,
+    },
+    title: {
+      type: Sequelize.STRING,
+    },
+
+    url: {
+      type: Sequelize.STRING,
+    },
+    createdAt: {
+      allowNull: false,
+      type: Sequelize.DATE,
+    },
+    updatedAt: {
+      allowNull: false,
+      type: Sequelize.DATE,
+    },
+  });
+
   if (err) throw err;
   console.log("Connected!");
   app.get("/", async (req, res) => {
@@ -48,40 +139,6 @@ conn.connect(function (err) {
     });
 
   app.post("/comment", async (req, res) => {
-    const comment = sequelize.define("comments", {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER,
-      },
-      title: {
-        type: Sequelize.STRING,
-      },
-      commentableId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "videos",
-          key: "id",
-        },
-        // references:{
-        //   model: "photos",
-        //   key: "id",
-        // }
-      },
-      commentableType: {
-        type: Sequelize.STRING,
-      },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
-    });
     sequelize.sync().then(() => {
       let title = req.body.title;
       let comentid = req.body.comid;
@@ -104,29 +161,6 @@ conn.connect(function (err) {
     console.log("title= ", title);
     let url = req.body.url;
     console.log("title= ", url);
-    const photo = sequelize.define("photos", {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER,
-      },
-      title: {
-        type: Sequelize.STRING,
-      },
-
-      url: {
-        type: Sequelize.STRING,
-      },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
-    });
 
     photo.create(
       {
@@ -141,31 +175,8 @@ conn.connect(function (err) {
     let text = req.body.text;
     console.log("title= ", title);
     console.log("title= ", text);
-    const video = sequelize.define("videos", {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER,
-      },
-      title: {
-        type: Sequelize.STRING,
-      },
 
-      text: {
-        type: Sequelize.STRING,
-      },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
-    });
-
-    video.create(
+    comment.create(
       {
         title: `${title}`,
         text: `${text}`,
@@ -173,7 +184,54 @@ conn.connect(function (err) {
       //   { title: "video title", text: "video text get" }
     );
   });
-});
 
+  app.post("/select", async () => {
+    // comment with photo
+    await com
+      .findOne({
+        include: { model: pht, as: "img_id" },
+      })
+      .then((findedUser) => {
+        // Get the User with Company datas included
+        console.log("for photos table", findedUser.img_id);
+        console.log("for comment table", findedUser);
+        // Get the company record only
+        // console.log(findedUser.company)
+      })
+      .catch((err) => {
+        console.log("Error while find comment with photo : ", err);
+      });
+
+    // comment with videos
+    await com
+      .findOne({
+        include: { model: vid, as: "v_id" },
+      })
+      .then((findedUser) => {
+        // Get the User with Company datas included
+        console.log("for video table", findedUser.v_id);
+        console.log("for comment table", findedUser);
+        // Get the company record only
+        // console.log(findedUser.company)
+      })
+      .catch((err) => {
+        console.log("Error while find comment with photo : ", err);
+      });
+  });
+
+  app.post("/update", async (req, res) => {
+    await com
+      .update(
+        { title: "new uri"},
+        {  where: { id: 2 } }
+      )
+      .then(() => {
+        console.log("updated data");
+      })
+      .catch((err) => {
+        console.log("error",err);
+      });
+  });
+});
 app.listen(port, () => console.log(`http://localhost:${port}`));
 // });
