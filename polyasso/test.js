@@ -185,51 +185,73 @@ conn.connect(function (err) {
     );
   });
 
-  app.post("/select", async () => {
+  app.get("/select", async (req, res) => {
     // comment with photo
     await com
-      .findOne({
-        include: { model: pht, as: "img_id" },
-      })
+      .findAll()
       .then((findedUser) => {
         // Get the User with Company datas included
-        console.log("for photos table", findedUser.img_id);
-        console.log("for comment table", findedUser);
+        // console.log("for photos table", findedUser.img_id);
+        // console.log("for comment table", findedUser);
         // Get the company record only
-        // console.log(findedUser.company)
-      })
-      .catch((err) => {
-        console.log("Error while find comment with photo : ", err);
-      });
+        console.log(findedUser[0].id);
+        console.log("all data", findedUser);
 
-    // comment with videos
-    await com
-      .findOne({
-        include: { model: vid, as: "v_id" },
-      })
-      .then((findedUser) => {
-        // Get the User with Company datas included
-        console.log("for video table", findedUser.v_id);
-        console.log("for comment table", findedUser);
-        // Get the company record only
-        // console.log(findedUser.company)
+        res.render("new.ejs", { findus: findedUser });
       })
       .catch((err) => {
         console.log("Error while find comment with photo : ", err);
       });
   });
 
+  // for one to many
+  app.get("/select1", async (req, res) => {
+    // comment with photo
+    await com
+      .findAll({
+       
+        include: { model: vid, as: "v_id" },
+      })
+      .then((findedUser) => {
+        // console.log(findedUser[0].id);
+        console.log("all data", findedUser[0].id);
+
+        res.render("onetomany.ejs", { findus: findedUser });
+      })
+      .catch((err) => {
+        console.log("Error while find comment  : ", err);
+      });
+  });
+
+  // for many to many
+   // for one to many
+   app.get("/select2", async (req, res) => {
+    // comment with photo
+    await com
+      .findAll({
+       
+        include:[ { model: vid, as: "v_id" },{model:pht,as:"img_id"}]
+      })
+      .then((findedUser) => {
+        // console.log(findedUser[0].id);
+        console.log("all data", findedUser[0].id);
+
+        res.render("onetomany.ejs", { findus: findedUser });
+      })
+      .catch((err) => {
+        console.log("Error while find comment  : ", err);
+      });
+  });
+
+
   app.post("/update", async (req, res) => {
     await com
-      .update(
-        { title: "new uri"},
-        {  where: { id: 2 } }
-      )
+      .update({ title: "new uri" }, { where: { id: 2 } })
       .then(() => {
         console.log("updated data");
       })
       .catch((err) => {
-        console.log("error",err);
+        console.log("error", err);
       });
   });
 });

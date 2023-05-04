@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Data table</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css"
+    />
+
+    <script
+      type="text/javascript"
+      src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"
+    ></script>
+
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $("#example").dataTable({
+          // all default make false
+          lengthMenu: [1,5, 10, 15, 20, 25, 30, 35, 40, 45],
+          pagingType: "full_numbers",
+
+      
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <table id="example" class="display" style="width: 100%">
+      <thead>
+        <tr>
+          <th>id</th>
+          <th>title</th>
+          <th>commentableid</th>
+          <th>commentabletype</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <%let dblen=findus.length%>  
+          <!-- <%=dblen%> -->
+          <%var a=0%>
+          <%for(a;a<dblen;a++){%>
+            <%=a%>
+          <td><%=findus[a].id%></td>
+          <td><%=findus[a].title%></td>
+          <td><%=findus[a].commentableId%></td>
+          <td><%=findus[a].commentableType%></td>
+        </tr>
+        <%}%>
+      </tbody>
+      <tfoot>
+        <tr>
+            <th>id</th>
+            <th>title</th>
+            <th>commentableid</th>
+            <th>commentabletype</th>
+        </tr>
+      </tfoot>
+    </table>
+  </body>
+</html>
