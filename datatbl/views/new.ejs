@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Data table</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css"
+    />
+
+    <script
+      type="text/javascript"
+      src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"
+    ></script>
+
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $("#example").dataTable({
+          // all default make false
+          lengthMenu: [5, 10, 15, 20, 25, 30, 35, 40, 45],
+          pagingType: "full_numbers",
+
+          // horizontal scrollbar
+          // scrollY: "200px",
+          // scrollCollapse: true,
+          // paging: false,
+
+          // for one column sorting
+          // order: [[0, "asc"]],
+          // // for multiple column sorting
+          // columnDefs: [
+          //   {
+          //     targets: [0],
+          //     orderData: [0, 1],
+          //   },
+          //   {
+          //     targets: [1],
+          //     orderData: [1, 0],
+          //   },
+          //   {
+          //     targets: [4],
+          //     orderData: [4, 0],
+          //   },
+          // ],
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <table id="example" class="display" style="width: 100%">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Position</th>
+          <th>Office</th>
+          <th>Age</th>
+          <th>Start date</th>
+          <th>Salary</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <%let dblen=findedUser.length%> <%let a=0;%>
+          <%for(a=0;a<=dblen;a++){%>
+          <td><%=dblen[a]%></td>
+          <td><%=dblen[a]%></td>
+          <td><%=dblen[a]%></td>
+          <td><%=dblen[a]%></td>
+          <td><%=dblen[a]%></td>
+          <td><%=dblen[a]%></td>
+          <%}%>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <th>Name</th>
+          <th>Position</th>
+          <th>Office</th>
+          <th>Age</th>
+          <th>Start date</th>
+          <th>Salary</th>
+        </tr>
+      </tfoot>
+    </table>
+  </body>
+</html>

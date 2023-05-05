@@ -7,6 +7,7 @@ const videos = require("./models/videos");
 const { Model } = require("sequelize");
 var bodyparser = require("body-parser");
 const models = require("./models");
+const controller = require("./controller");
 
 const com = models.comment;
 const vid = models.videos;
@@ -126,7 +127,7 @@ conn.connect(function (err) {
   console.log("Connected!");
   app.get("/", async (req, res) => {
     console.log("Connected! first api");
-  });
+  });   
   const Op = Sequelize.Op;
 
   sequelize
@@ -195,7 +196,7 @@ conn.connect(function (err) {
         // console.log("for comment table", findedUser);
         // Get the company record only
         console.log(findedUser[0].id);
-        console.log("all data", findedUser);
+        // console.log("all data", findedUser);
 
         res.render("new.ejs", { findus: findedUser });
       })
@@ -209,12 +210,11 @@ conn.connect(function (err) {
     // comment with photo
     await com
       .findAll({
-       
         include: { model: vid, as: "v_id" },
       })
       .then((findedUser) => {
         // console.log(findedUser[0].id);
-        console.log("all data", findedUser[0].id);
+        // console.log("all data", findedUser[0].id);
 
         res.render("onetomany.ejs", { findus: findedUser });
       })
@@ -224,26 +224,14 @@ conn.connect(function (err) {
   });
 
   // for many to many
-   // for one to many
-   app.get("/select2", async (req, res) => {
+  // for one to many
+  app.get("/select2", async (req, res) => {
     // comment with photo
-    await com
-      .findAll({
-       
-        include:[ { model: vid, as: "v_id" },{model:pht,as:"img_id"}]
-      })
-      .then((findedUser) => {
-        // console.log(findedUser[0].id);
-        console.log("all data", findedUser[0].id);
-
-        res.render("onetomany.ejs", { findus: findedUser });
-      })
-      .catch((err) => {
-        console.log("Error while find comment  : ", err);
-      });
+    res.render("onetomany.ejs")
   });
+  app.get("/getdata?", controller.data_table); 
 
-
+  
   app.post("/update", async (req, res) => {
     await com
       .update({ title: "new uri" }, { where: { id: 2 } })

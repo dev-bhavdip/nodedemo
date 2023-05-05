@@ -11,6 +11,6 @@ app.set("view engine", "ejs");
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(express.json());
 
-router.route("/").get(home);
-router.route("/index.ejs").post(valid);
+router.get("/",home);
+router.post("/index.ejs",valid);
 module.exports = router;

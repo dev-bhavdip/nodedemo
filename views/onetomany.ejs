@@ -21,13 +21,10 @@
     <script type="text/javascript">
       $(document).ready(function () {
         $("#example").dataTable({
-          lengthMenu: [1, 5, 10, 15, 20, 25, 30, 35, 40, 45],
-
           // all default make false
-          // pagingType: "full_numbers",
-          processing: true,
-          serverSide: true,
-          lengthMenu: true,
+          lengthMenu: [1, 5, 10, 15, 20, 25, 30, 35, 40, 45],
+          pagingType: "full_numbers",
+
           ajax: {
             url: "/getdata?",
           },
@@ -59,7 +56,7 @@
           <th>img url</th>
         </tr>
       </thead>
-      <tbody></tbody>
+
       <tfoot>
         <tr>
           <th>id</th>
