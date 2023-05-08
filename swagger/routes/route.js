@@ -1,17 +1,19 @@
 const express = require("express");
-const joi = require("joi");
 var bodyparser = require("body-parser");
-let home = require("./routes/route");
+const controller = require("../controllers/controller");
+let apis = controller.api;
+const pst=controller.pst;
+const router = express.Router();
+
 let app = express();
 app.set("view engine", "ejs");
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(express.json());
-let port = 3004;
 
 try {
-  app.use("/", home);
-
-  app.listen(port, () => console.log(`http://localhost:${port}`));
+  router.get("/", apis);
+  router.post("/pst",pst);
 } catch (err) {
   throw err;
 }
+module.exports = router;

@@ -4,7 +4,7 @@
   "description": "",
   "main": "other.js",
   "scripts": {
-    "start": "nodemon /home/bhavdip-dodiya/Desktop/testdb/polyasso/test.js",
+    "start": "nodemon /home/bhavdip-dodiya/Desktop/testdb/swagger/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -22,7 +22,9 @@
     "mysql": "^2.18.1",
     "mysql2": "^3.2.3",
     "nodemon": "^2.0.22",
-    "sequelize": "^6.31.1"
+    "sequelize": "^6.31.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^4.6.3"
   },
   "devDependencies": {
     "@types/jquery": "^3.5.16",

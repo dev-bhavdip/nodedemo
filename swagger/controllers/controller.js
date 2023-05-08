@@ -1,17 +1,20 @@
 const express = require("express");
-const joi = require("joi");
 var bodyparser = require("body-parser");
-let home = require("./routes/route");
+const { func } = require("joi");
+
 let app = express();
 app.set("view engine", "ejs");
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(express.json());
-let port = 3004;
 
 try {
-  app.use("/", home);
-
-  app.listen(port, () => console.log(`http://localhost:${port}`));
+  let api = async function api(req, res, next) {
+    res.send("sucessfull");
+  };
+  let pst = async function pst(req, res, next) {
+    res.send("this is from post request");
+  };
+  module.exports = { api ,pst};
 } catch (err) {
   throw err;
 }
