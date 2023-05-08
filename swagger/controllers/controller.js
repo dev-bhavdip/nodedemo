@@ -1,7 +1,5 @@
 const express = require("express");
 var bodyparser = require("body-parser");
-const { func } = require("joi");
-
 let app = express();
 app.set("view engine", "ejs");
 app.use(bodyparser.urlencoded({ extended: false }));

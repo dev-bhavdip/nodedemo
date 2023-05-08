@@ -4,7 +4,7 @@
   "description": "",
   "main": "other.js",
   "scripts": {
-    "start": "nodemon /home/bhavdip-dodiya/Desktop/testdb/swagger/index.js",
+    "start": "nodemon /home/bhavdip-dodiya/Desktop/testdb/cntrlcrud/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>controller</title>
+  </head>
+  <body>
+    <!-- for checkbox -->
+    <%=type%> <%=ctrlkey%>
+     <%if(type=="checkbox"&& multiallow == 0){%> 
+      <% for(let a = 0; a < lenop; a++) {%>
+    <input type="checkbox" name="<%=ctrlkey%>" id="" value="<%=option[a]%>" />
+    <label for="checkbox"><%=option[a]%></label>
+    <%}%>
+    
+
+    <%}else if(type=="checkbox"&& multiallow == 1){%> 
+    <%for(let a = 0; a < lenop; a++) {%>
+    <input type="checkbox" name="<%=ctrlkey%>" id="" value="<%=option[a]%>" />
+    <label for="checkbox"><%=option[a]%></label>
+    <%}%> 
+   
+
+<!-- for radio button -->
+<%}else if(type=="radio"&& multiallow == 0){%> 
+  <% for(let a = 0; a < lenop; a++) {%>
+<input type="radio" name="<%=ctrlkey%>" id="" value="<%=option[a]%>" />
+<label for="radio"><%=option[a]%></label>
+<%}%>
+ 
+
+<%}else if(type=="radio"&& multiallow == 1){%> 
+<%for(let a = 0; a < lenop; a++) {%>
+<input type="radio" name="<%=[a]%>" id="" value="<%=option[a]%>" />
+<label for="radio"><%=option[a]%></label>
+<%}%> 
+
+
+<!-- for drop down list -->
+<%}else if (type == "select" && multiallow == 0) {%>
+  <select name='${ctrlkey}' id="" >;
+  <%for (let a = 0; a < lenop; a++) {%>
+   <option value="<%=option[a]%>"><%=option[a]%></option>;
+  <%}%>
+  </select>;
+<%} else if ((type = "select" && multiallow == 1)) {%>
+ <select name='<%=ctrlkey%>' id="" multiple >;
+  <%for (let a = 0; a < lenop; a++) {%>
+   <option value="<%=option[a]%>"><%=option[a]%></option>;
+  <%}%>
+ </select>
+ <%}else{%>
+<h2>nothing defined</h2>
+  <%}%>
+  </body>
+</html>
